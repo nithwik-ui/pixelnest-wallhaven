@@ -1,24 +1,29 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "@/components/app-shell";
 import { InfiniteGrid } from "@/components/infinite-grid";
 import { POPULAR_COLORS } from "@/lib/wallhaven";
 import { cn } from "@/lib/utils";
 
-const searchSchema = z.object({
-  q: z.string().optional(),
-  sorting: z.enum(["relevance", "date_added", "views", "favorites", "random", "toplist", "hot"]).optional(),
-  atleast: z.string().optional(),
-  ratios: z.string().optional(),
-  categories: z.string().optional(),
-  purity: z.string().optional(),
-  colors: z.string().optional(),
-});
+type DiscoverSearch = {
+  q?: string;
+  sorting?: "relevance" | "date_added" | "views" | "favorites" | "random" | "toplist" | "hot";
+  atleast?: string;
+  ratios?: string;
+  categories?: string;
+  purity?: string;
+  colors?: string;
+};
 
 export const Route = createFileRoute("/discover")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): DiscoverSearch => ({
+    q: typeof search.q === "string" ? search.q : undefined,
+    sorting: search.sorting as DiscoverSearch["sorting"],
+    atleast: typeof search.atleast === "string" ? search.atleast : undefined,
+    ratios: typeof search.ratios === "string" ? search.ratios : undefined,
+    categories: typeof search.categories === "string" ? search.categories : undefined,
+    purity: typeof search.purity === "string" ? search.purity : undefined,
+    colors: typeof search.colors === "string" ? search.colors : undefined,
+  }),
   component: Discover,
 });
 
