@@ -74,7 +74,7 @@ function Discover() {
   const navigate = useNavigate({ from: "/discover" });
 
   const set = (patch: Record<string, string | undefined>) => {
-    navigate({ search: (prev) => ({ ...prev, ...patch }) as never });
+    navigate({ search: (prev: DiscoverSearch) => ({ ...prev, ...patch }) as never });
   };
 
   return (
