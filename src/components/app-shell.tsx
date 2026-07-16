@@ -18,7 +18,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { getSettings, saveSettings } from "@/lib/storage";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof Home; exact?: boolean };
+const NAV: NavItem[] = [
   { to: "/", label: "Home", icon: Home, exact: true },
   { to: "/discover", label: "Discover", icon: Compass },
   { to: "/trending", label: "Trending", icon: Flame },
@@ -28,7 +29,7 @@ const NAV = [
   { to: "/downloads", label: "Downloads", icon: Download },
   { to: "/history", label: "History", icon: History },
   { to: "/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
