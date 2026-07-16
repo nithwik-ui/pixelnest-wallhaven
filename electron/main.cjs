@@ -166,7 +166,7 @@ async function createWindow() {
     title: "PixelNest",
     icon: path.join(__dirname, "../public/icon.ico"),
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
       nodeIntegration: false,
     },

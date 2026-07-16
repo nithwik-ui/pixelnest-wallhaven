@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "Premium native wallpaper browser for Windows.",
   "author": "Nithwik Studios",
-  "main": "electron/main.js",
+  "main": "electron/main.cjs",
   "private": true,
   "sideEffects": false,
   "type": "module",
