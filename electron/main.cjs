@@ -136,26 +136,29 @@ function setWallpaper(filePath) {
   return new Promise((resolve, reject) => {
     const absolutePath = path.resolve(filePath);
 
-    // Win32 API SystemParametersInfo via PowerShell
-    const psCommand = `
-      $code = @'
-      [DllImport("user32.dll", CharSet=CharSet.Auto)]
-      public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
-      '@
-      $type = Add-Type -MemberDefinition $code -Name "Win32Utils" -Namespace "Win32" -PassThru
-      $null = $type::SystemParametersInfo(20, 0, "${absolutePath}", 3)
-    `;
+    const psScript = `
+$code = @'
+using System;
+using System.Runtime.InteropServices;
+public class Win32Utils {
+  [DllImport("user32.dll", CharSet=CharSet.Auto)]
+  public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+}
+'@
+Add-Type -TypeDefinition $code
+$null = [Win32Utils]::SystemParametersInfo(20, 0, "${absolutePath}", 3)
+`;
 
-    exec(
-      `powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "${psCommand.replace(/\n/g, " ")}"`,
-      (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      },
-    );
+    const buffer = Buffer.from(psScript, "utf16le");
+    const base64 = buffer.toString("base64");
+
+    exec(`powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${base64}`, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
   });
 }
 
