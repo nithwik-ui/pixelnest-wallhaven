@@ -9,38 +9,228 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrendingRouteImport } from './routes/trending'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LatestRouteImport } from './routes/latest'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as DownloadsRouteImport } from './routes/downloads'
+import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WallpaperIdRouteImport } from './routes/wallpaper.$id'
+import { Route as ApiWallhavenSplatRouteImport } from './routes/api/wallhaven.$'
 
+const TrendingRoute = TrendingRouteImport.update({
+  id: '/trending',
+  path: '/trending',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LatestRoute = LatestRouteImport.update({
+  id: '/latest',
+  path: '/latest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadsRoute = DownloadsRouteImport.update({
+  id: '/downloads',
+  path: '/downloads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WallpaperIdRoute = WallpaperIdRouteImport.update({
+  id: '/wallpaper/$id',
+  path: '/wallpaper/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWallhavenSplatRoute = ApiWallhavenSplatRouteImport.update({
+  id: '/api/wallhaven/$',
+  path: '/api/wallhaven/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
+  '/discover': typeof DiscoverRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
+  '/history': typeof HistoryRoute
+  '/latest': typeof LatestRoute
+  '/settings': typeof SettingsRoute
+  '/trending': typeof TrendingRoute
+  '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
+  '/discover': typeof DiscoverRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
+  '/history': typeof HistoryRoute
+  '/latest': typeof LatestRoute
+  '/settings': typeof SettingsRoute
+  '/trending': typeof TrendingRoute
+  '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/categories': typeof CategoriesRoute
+  '/discover': typeof DiscoverRoute
+  '/downloads': typeof DownloadsRoute
+  '/favorites': typeof FavoritesRoute
+  '/history': typeof HistoryRoute
+  '/latest': typeof LatestRoute
+  '/settings': typeof SettingsRoute
+  '/trending': typeof TrendingRoute
+  '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/downloads'
+    | '/favorites'
+    | '/history'
+    | '/latest'
+    | '/settings'
+    | '/trending'
+    | '/wallpaper/$id'
+    | '/api/wallhaven/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/downloads'
+    | '/favorites'
+    | '/history'
+    | '/latest'
+    | '/settings'
+    | '/trending'
+    | '/wallpaper/$id'
+    | '/api/wallhaven/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/categories'
+    | '/discover'
+    | '/downloads'
+    | '/favorites'
+    | '/history'
+    | '/latest'
+    | '/settings'
+    | '/trending'
+    | '/wallpaper/$id'
+    | '/api/wallhaven/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriesRoute: typeof CategoriesRoute
+  DiscoverRoute: typeof DiscoverRoute
+  DownloadsRoute: typeof DownloadsRoute
+  FavoritesRoute: typeof FavoritesRoute
+  HistoryRoute: typeof HistoryRoute
+  LatestRoute: typeof LatestRoute
+  SettingsRoute: typeof SettingsRoute
+  TrendingRoute: typeof TrendingRoute
+  WallpaperIdRoute: typeof WallpaperIdRoute
+  ApiWallhavenSplatRoute: typeof ApiWallhavenSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trending': {
+      id: '/trending'
+      path: '/trending'
+      fullPath: '/trending'
+      preLoaderRoute: typeof TrendingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/latest': {
+      id: '/latest'
+      path: '/latest'
+      fullPath: '/latest'
+      preLoaderRoute: typeof LatestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/downloads': {
+      id: '/downloads'
+      path: '/downloads'
+      fullPath: '/downloads'
+      preLoaderRoute: typeof DownloadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +238,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/wallpaper/$id': {
+      id: '/wallpaper/$id'
+      path: '/wallpaper/$id'
+      fullPath: '/wallpaper/$id'
+      preLoaderRoute: typeof WallpaperIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/wallhaven/$': {
+      id: '/api/wallhaven/$'
+      path: '/api/wallhaven/$'
+      fullPath: '/api/wallhaven/$'
+      preLoaderRoute: typeof ApiWallhavenSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriesRoute: CategoriesRoute,
+  DiscoverRoute: DiscoverRoute,
+  DownloadsRoute: DownloadsRoute,
+  FavoritesRoute: FavoritesRoute,
+  HistoryRoute: HistoryRoute,
+  LatestRoute: LatestRoute,
+  SettingsRoute: SettingsRoute,
+  TrendingRoute: TrendingRoute,
+  WallpaperIdRoute: WallpaperIdRoute,
+  ApiWallhavenSplatRoute: ApiWallhavenSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
