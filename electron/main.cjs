@@ -1,4 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require("electron");
+
+// Disable default menu bar globally
+Menu.setApplicationMenu(null);
 const { fork } = require("child_process");
 const { exec } = require("child_process");
 const path = require("path");
@@ -168,6 +171,7 @@ async function createWindow() {
     height: 800,
     title: "PixelNest",
     icon: path.join(__dirname, "../public/icon.ico"),
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
