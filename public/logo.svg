@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Grid backdrop -->
+  <rect width="100" height="100" rx="22" fill="currentColor" opacity="0.08"/>
+  <!-- Grid lines -->
+  <line x1="33" y1="10" x2="33" y2="55" stroke="currentColor" stroke-width="1.5" opacity="0.25"/>
+  <line x1="50" y1="10" x2="50" y2="40" stroke="currentColor" stroke-width="1.5" opacity="0.25"/>
+  <line x1="67" y1="10" x2="67" y2="55" stroke="currentColor" stroke-width="1.5" opacity="0.25"/>
+  <line x1="10" y1="28" x2="75" y2="28" stroke="currentColor" stroke-width="1.5" opacity="0.25"/>
+  <line x1="10" y1="42" x2="75" y2="42" stroke="currentColor" stroke-width="1.5" opacity="0.25"/>
+  <!-- Sun -->
+  <circle cx="50" cy="35" r="14" fill="currentColor" opacity="0.9"/>
+  <!-- Mountains -->
+  <path d="M15 72 L32 50 L49 72Z" fill="currentColor" opacity="0.85"/>
+  <path d="M36 72 L53 48 L70 72Z" fill="currentColor" opacity="0.70"/>
+  <!-- Nest base -->
+  <path d="M8 78 Q20 68 35 74 Q50 80 65 74 Q80 68 92 78" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M12 84 Q26 72 42 79 Q50 83 58 79 Q74 72 88 84" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <!-- Wave detail -->
+  <path d="M18 91 Q27 86 36 91 Q45 96 54 91 Q63 86 72 91 Q80 95 88 91" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+</svg>

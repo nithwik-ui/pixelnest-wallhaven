@@ -8,7 +8,7 @@ function Latest() {
   return (
     <div className="mx-auto max-w-[1600px]">
       <PageHeader title="Latest" subtitle="Freshly uploaded wallpapers, updated in real time." />
-      <InfiniteGrid params={{ sorting: "date_added" }} />
+      <InfiniteGrid params={{ sorting: "date_added", provider: "all" }} />
     </div>
   );
 }

@@ -8,7 +8,7 @@ function Trending() {
   return (
     <div className="mx-auto max-w-[1600px]">
       <PageHeader title="Trending" subtitle="The most loved wallpapers right now." />
-      <InfiniteGrid params={{ sorting: "toplist", topRange: "1w" }} />
+      <InfiniteGrid params={{ sorting: "toplist", topRange: "1w", provider: "all" }} />
     </div>
   );
 }

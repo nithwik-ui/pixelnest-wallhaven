@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Moon,
   Sun,
+  BookOpen,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const NAV: NavItem[] = [
   { to: "/latest", label: "Latest", icon: Sparkles },
   { to: "/categories", label: "Categories", icon: LayoutGrid },
   { to: "/favorites", label: "Favorites", icon: Heart },
+  { to: "/library", label: "Library", icon: BookOpen },
   { to: "/downloads", label: "Downloads", icon: Download },
   { to: "/history", label: "History", icon: History },
   { to: "/settings", label: "Settings", icon: Settings },
@@ -61,7 +63,12 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-background px-4 py-6 md:flex">
         <Link to="/" className="mb-8 flex items-center gap-2.5 px-2">
           <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-background">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-8h6v8"/></svg>
+            <img
+              src="/logo.svg"
+              alt="PixelNest logo"
+              className="h-5 w-5 invert dark:invert-0"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
           </div>
           <span className="text-lg font-semibold tracking-tight">PixelNest</span>
         </Link>
@@ -80,7 +87,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                     : "text-muted-foreground hover:bg-[var(--color-surface)] hover:text-foreground",
                 )}
               >
-                <Icon className={cn("h-[18px] w-[18px] transition-transform", active && "scale-110")} />
+                <Icon
+                  className={cn("h-[18px] w-[18px] transition-transform", active && "scale-110")}
+                />
                 {label}
               </Link>
             );
@@ -88,7 +97,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="mt-4 rounded-xl border border-border bg-[var(--color-surface)] p-3 text-xs text-muted-foreground">
-          <div className="mb-1 font-medium text-foreground">Powered by Wallhaven</div>
+          <div className="mb-1 font-medium text-foreground">Powered by Nithwik Studios</div>
           Millions of high-quality wallpapers.
         </div>
       </aside>
@@ -128,7 +137,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 }
 
-export function PageHeader({ title, subtitle, right }: { title: string; subtitle?: string; right?: ReactNode }) {
+export function PageHeader({
+  title,
+  subtitle,
+  right,
+}: {
+  title: string;
+  subtitle?: string;
+  right?: ReactNode;
+}) {
   return (
     <div className="mb-8 flex items-end justify-between gap-4">
       <div>

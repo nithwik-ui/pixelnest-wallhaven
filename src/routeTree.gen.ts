@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrendingRouteImport } from './routes/trending'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LatestRouteImport } from './routes/latest'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as FavoritesRouteImport } from './routes/favorites'
@@ -19,7 +20,10 @@ import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WallpaperIdRouteImport } from './routes/wallpaper.$id'
+import { Route as ApiDownloadRouteImport } from './routes/api/download'
 import { Route as ApiWallhavenSplatRouteImport } from './routes/api/wallhaven.$'
+import { Route as ApiPixabaySplatRouteImport } from './routes/api/pixabay.$'
+import { Route as ApiPexelsSplatRouteImport } from './routes/api/pexels.$'
 
 const TrendingRoute = TrendingRouteImport.update({
   id: '/trending',
@@ -29,6 +33,11 @@ const TrendingRoute = TrendingRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LatestRoute = LatestRouteImport.update({
@@ -71,9 +80,24 @@ const WallpaperIdRoute = WallpaperIdRouteImport.update({
   path: '/wallpaper/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDownloadRoute = ApiDownloadRouteImport.update({
+  id: '/api/download',
+  path: '/api/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiWallhavenSplatRoute = ApiWallhavenSplatRouteImport.update({
   id: '/api/wallhaven/$',
   path: '/api/wallhaven/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPixabaySplatRoute = ApiPixabaySplatRouteImport.update({
+  id: '/api/pixabay/$',
+  path: '/api/pixabay/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPexelsSplatRoute = ApiPexelsSplatRouteImport.update({
+  id: '/api/pexels/$',
+  path: '/api/pexels/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -85,9 +109,13 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/history': typeof HistoryRoute
   '/latest': typeof LatestRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
   '/trending': typeof TrendingRoute
+  '/api/download': typeof ApiDownloadRoute
   '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/pexels/$': typeof ApiPexelsSplatRoute
+  '/api/pixabay/$': typeof ApiPixabaySplatRoute
   '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRoutesByTo {
@@ -98,9 +126,13 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/history': typeof HistoryRoute
   '/latest': typeof LatestRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
   '/trending': typeof TrendingRoute
+  '/api/download': typeof ApiDownloadRoute
   '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/pexels/$': typeof ApiPexelsSplatRoute
+  '/api/pixabay/$': typeof ApiPixabaySplatRoute
   '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRoutesById {
@@ -112,9 +144,13 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/history': typeof HistoryRoute
   '/latest': typeof LatestRoute
+  '/library': typeof LibraryRoute
   '/settings': typeof SettingsRoute
   '/trending': typeof TrendingRoute
+  '/api/download': typeof ApiDownloadRoute
   '/wallpaper/$id': typeof WallpaperIdRoute
+  '/api/pexels/$': typeof ApiPexelsSplatRoute
+  '/api/pixabay/$': typeof ApiPixabaySplatRoute
   '/api/wallhaven/$': typeof ApiWallhavenSplatRoute
 }
 export interface FileRouteTypes {
@@ -127,9 +163,13 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/history'
     | '/latest'
+    | '/library'
     | '/settings'
     | '/trending'
+    | '/api/download'
     | '/wallpaper/$id'
+    | '/api/pexels/$'
+    | '/api/pixabay/$'
     | '/api/wallhaven/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -140,9 +180,13 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/history'
     | '/latest'
+    | '/library'
     | '/settings'
     | '/trending'
+    | '/api/download'
     | '/wallpaper/$id'
+    | '/api/pexels/$'
+    | '/api/pixabay/$'
     | '/api/wallhaven/$'
   id:
     | '__root__'
@@ -153,9 +197,13 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/history'
     | '/latest'
+    | '/library'
     | '/settings'
     | '/trending'
+    | '/api/download'
     | '/wallpaper/$id'
+    | '/api/pexels/$'
+    | '/api/pixabay/$'
     | '/api/wallhaven/$'
   fileRoutesById: FileRoutesById
 }
@@ -167,9 +215,13 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   HistoryRoute: typeof HistoryRoute
   LatestRoute: typeof LatestRoute
+  LibraryRoute: typeof LibraryRoute
   SettingsRoute: typeof SettingsRoute
   TrendingRoute: typeof TrendingRoute
+  ApiDownloadRoute: typeof ApiDownloadRoute
   WallpaperIdRoute: typeof WallpaperIdRoute
+  ApiPexelsSplatRoute: typeof ApiPexelsSplatRoute
+  ApiPixabaySplatRoute: typeof ApiPixabaySplatRoute
   ApiWallhavenSplatRoute: typeof ApiWallhavenSplatRoute
 }
 
@@ -187,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/latest': {
@@ -245,11 +304,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WallpaperIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/download': {
+      id: '/api/download'
+      path: '/api/download'
+      fullPath: '/api/download'
+      preLoaderRoute: typeof ApiDownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/wallhaven/$': {
       id: '/api/wallhaven/$'
       path: '/api/wallhaven/$'
       fullPath: '/api/wallhaven/$'
       preLoaderRoute: typeof ApiWallhavenSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/pixabay/$': {
+      id: '/api/pixabay/$'
+      path: '/api/pixabay/$'
+      fullPath: '/api/pixabay/$'
+      preLoaderRoute: typeof ApiPixabaySplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/pexels/$': {
+      id: '/api/pexels/$'
+      path: '/api/pexels/$'
+      fullPath: '/api/pexels/$'
+      preLoaderRoute: typeof ApiPexelsSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -263,11 +343,25 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   HistoryRoute: HistoryRoute,
   LatestRoute: LatestRoute,
+  LibraryRoute: LibraryRoute,
   SettingsRoute: SettingsRoute,
   TrendingRoute: TrendingRoute,
+  ApiDownloadRoute: ApiDownloadRoute,
   WallpaperIdRoute: WallpaperIdRoute,
+  ApiPexelsSplatRoute: ApiPexelsSplatRoute,
+  ApiPixabaySplatRoute: ApiPixabaySplatRoute,
   ApiWallhavenSplatRoute: ApiWallhavenSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

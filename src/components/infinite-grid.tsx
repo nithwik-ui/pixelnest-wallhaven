@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { searchWallpapers, type SearchParams, type Wallpaper } from "@/lib/wallhaven";
+import { searchProviders, type SearchParams } from "@/lib/providers/registry";
+import type { Wallpaper } from "@/lib/providers/types";
 import { WallpaperGrid, GridSkeleton } from "./wallpaper-card";
 
 export function InfiniteGrid({ params }: { params: SearchParams }) {
@@ -16,11 +17,11 @@ export function InfiniteGrid({ params }: { params: SearchParams }) {
       setLoading(true);
       setError(null);
       try {
-        const res = await searchWallpapers({ ...params, page: p });
+        const res = await searchProviders({ ...params, page: p });
         setItems((prev) => (reset ? res.data : [...prev, ...res.data]));
         if (res.data.length === 0 || p >= res.meta.last_page) setDone(true);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to load");
+        setError(e instanceof Error ? e.message : "Failed to load wallpapers");
       } finally {
         setLoading(false);
       }
@@ -56,7 +57,9 @@ export function InfiniteGrid({ params }: { params: SearchParams }) {
   if (error && items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-[var(--color-surface)] p-16 text-center">
-        <p className="text-sm text-muted-foreground">Something went wrong loading wallpapers.</p>
+        <div className="text-3xl">⚠️</div>
+        <p className="font-medium">Something went wrong</p>
+        <p className="text-sm text-muted-foreground">{error}</p>
         <button
           onClick={() => load(1, true)}
           className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-transform hover:scale-[1.02]"
@@ -81,7 +84,9 @@ export function InfiniteGrid({ params }: { params: SearchParams }) {
     <>
       {items.length === 0 && loading ? <GridSkeleton /> : <WallpaperGrid items={items} />}
       {items.length > 0 && loading && (
-        <div className="mt-6"><GridSkeleton count={4} /></div>
+        <div className="mt-6">
+          <GridSkeleton count={4} />
+        </div>
       )}
       <div ref={sentinel} className="h-10" />
       {done && items.length > 0 && (

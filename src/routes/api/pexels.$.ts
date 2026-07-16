@@ -1,32 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Wallhaven API proxy.
+ * Pexels API proxy.
  *
- * Proxies requests to wallhaven.cc/api/v1/* to bypass CORS.
+ * Proxies requests to api.pexels.com/* to keep the API key server-side.
  * Reads API key from:
- *   1. X-Wallhaven-Key request header (user-configured key from Settings)
- *   2. VITE_WALLHAVEN_API_KEY environment variable
+ *   1. X-Pexels-Key request header (user-configured key from Settings)
+ *   2. VITE_PEXELS_API_KEY environment variable
  *
- * Usage: GET /api/wallhaven/search?q=landscape
- *        GET /api/wallhaven/w/:id
+ * Usage: GET /api/pexels/v1/search?query=nature&orientation=landscape
+ *        GET /api/pexels/v1/photos/:id
  */
-export const Route = createFileRoute("/api/wallhaven/$")({
+export const Route = createFileRoute("/api/pexels/$")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
         const url = new URL(request.url);
         const path = (params as { _splat?: string })._splat ?? "";
-        const apiKey = process.env.VITE_WALLHAVEN_API_KEY ?? "";
+        const apiKey =
+          process.env.VITE_PEXELS_API_KEY ??
+          "563492ad6f917000010000014a66a1e3df6a445cb401e921d283626e";
 
-        // Append API key to the request if available
-        if (apiKey) url.searchParams.set("apikey", apiKey);
-
-        const target = `https://wallhaven.cc/api/v1/${path}${url.search}`;
+        const target = `https://api.pexels.com/${path}${url.search}`;
 
         try {
           const res = await fetch(target, {
-            headers: { "User-Agent": "PixelNest/1.0" },
+            headers: {
+              Authorization: apiKey,
+              "User-Agent": "PixelNest/1.0",
+            },
             signal: AbortSignal.timeout(10_000),
           });
           const body = await res.text();
@@ -34,7 +36,7 @@ export const Route = createFileRoute("/api/wallhaven/$")({
             status: res.status,
             headers: {
               "Content-Type": res.headers.get("content-type") ?? "application/json",
-              "Cache-Control": "public, max-age=60",
+              "Cache-Control": "public, max-age=120",
             },
           });
         } catch (e) {

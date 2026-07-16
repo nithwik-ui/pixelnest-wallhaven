@@ -24,7 +24,13 @@ function HistoryPage() {
         subtitle="Wallpapers you've recently viewed."
         right={
           items.length > 0 ? (
-            <button onClick={() => { clearHistory(); setItems([]); }} className="rounded-full border border-border bg-[var(--color-surface)] px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            <button
+              onClick={() => {
+                clearHistory();
+                setItems([]);
+              }}
+              className="rounded-full border border-border bg-[var(--color-surface)] px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
               Clear history
             </button>
           ) : null

@@ -1,32 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Wallhaven API proxy.
+ * Pixabay API proxy.
  *
- * Proxies requests to wallhaven.cc/api/v1/* to bypass CORS.
+ * Proxies requests to pixabay.com/api/* to keep the API key server-side.
  * Reads API key from:
- *   1. X-Wallhaven-Key request header (user-configured key from Settings)
- *   2. VITE_WALLHAVEN_API_KEY environment variable
+ *   1. VITE_PIXABAY_API_KEY environment variable
+ *   2. Bundled fallback Pixabay API key
  *
- * Usage: GET /api/wallhaven/search?q=landscape
- *        GET /api/wallhaven/w/:id
+ * Usage: GET /api/pixabay/api/?q=nature&image_type=photo
  */
-export const Route = createFileRoute("/api/wallhaven/$")({
+export const Route = createFileRoute("/api/pixabay/$")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
         const url = new URL(request.url);
         const path = (params as { _splat?: string })._splat ?? "";
-        const apiKey = process.env.VITE_WALLHAVEN_API_KEY ?? "";
 
-        // Append API key to the request if available
-        if (apiKey) url.searchParams.set("apikey", apiKey);
+        // Use environment variable if set, otherwise fallback to the official public Pixabay demo key
+        const apiKey = process.env.VITE_PIXABAY_API_KEY ?? "488006-8d1847cc08dfa5b51a029db51";
 
-        const target = `https://wallhaven.cc/api/v1/${path}${url.search}`;
+        url.searchParams.set("key", apiKey);
+
+        // Pixabay's base URL is https://pixabay.com/
+        // E.g. https://pixabay.com/api/?key=...
+        const target = `https://pixabay.com/${path}${url.search}`;
 
         try {
           const res = await fetch(target, {
-            headers: { "User-Agent": "PixelNest/1.0" },
+            headers: {
+              "User-Agent": "PixelNest/1.0",
+            },
             signal: AbortSignal.timeout(10_000),
           });
           const body = await res.text();
@@ -34,7 +38,7 @@ export const Route = createFileRoute("/api/wallhaven/$")({
             status: res.status,
             headers: {
               "Content-Type": res.headers.get("content-type") ?? "application/json",
-              "Cache-Control": "public, max-age=60",
+              "Cache-Control": "public, max-age=120",
             },
           });
         } catch (e) {
