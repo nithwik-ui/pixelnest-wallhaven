@@ -191,6 +191,17 @@ async function createWindow() {
     mainWindow = null;
   });
 
+  // Trigger update check on startup in production
+  if (app.isPackaged) {
+    mainWindow.webContents.once("did-finish-load", () => {
+      setTimeout(() => {
+        autoUpdater.checkForUpdatesAndNotify().catch((err) => {
+          console.error("Error checking for updates on startup:", err);
+        });
+      }, 2000);
+    });
+  }
+
   // Setup auto-updater listeners
   autoUpdater.on("checking-for-update", () => {
     mainWindow.webContents.send("update-status", { status: "checking" });
