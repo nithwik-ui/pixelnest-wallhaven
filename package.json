@@ -1,6 +1,6 @@
 {
   "name": "pexelnest",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Premium native wallpaper browser for Windows.",
   "author": "Nithwik Studios",
   "main": "electron/main.cjs",
