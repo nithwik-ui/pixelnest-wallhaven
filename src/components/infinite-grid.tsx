@@ -48,7 +48,7 @@ export function InfiniteGrid({ params }: { params: SearchParams }) {
           load(next);
         }
       },
-      { rootMargin: "800px" },
+      { rootMargin: "1600px" },
     );
     obs.observe(el);
     return () => obs.disconnect();

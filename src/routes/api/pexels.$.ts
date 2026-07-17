@@ -27,7 +27,7 @@ export const Route = createFileRoute("/api/pexels/$")({
           const res = await fetch(target, {
             headers: {
               Authorization: apiKey,
-              "User-Agent": "PixelNest/1.0",
+              "User-Agent": "PexelNest/1.0",
             },
             signal: AbortSignal.timeout(10_000),
           });

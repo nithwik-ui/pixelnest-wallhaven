@@ -20,7 +20,7 @@ class TTLCache {
     let entry = this.store.get(key);
     if (!entry) {
       try {
-        const raw = localStorage.getItem(`pixelnest.cache.${key}`);
+        const raw = localStorage.getItem(`pexelnest.cache.${key}`);
         if (raw) {
           entry = JSON.parse(raw) as CacheEntry<unknown>;
         }
@@ -45,7 +45,7 @@ class TTLCache {
     this.store.set(key, entry);
     if (persist) {
       try {
-        localStorage.setItem(`pixelnest.cache.${key}`, JSON.stringify(entry));
+        localStorage.setItem(`pexelnest.cache.${key}`, JSON.stringify(entry));
       } catch {
         /* ignore */
       }
@@ -56,7 +56,7 @@ class TTLCache {
   delete(key: string): void {
     this.store.delete(key);
     try {
-      localStorage.removeItem(`pixelnest.cache.${key}`);
+      localStorage.removeItem(`pexelnest.cache.${key}`);
     } catch {
       /* ignore */
     }
@@ -67,7 +67,7 @@ class TTLCache {
     this.store.clear();
     try {
       Object.keys(localStorage).forEach((k) => {
-        if (k.startsWith("pixelnest.cache.")) localStorage.removeItem(k);
+        if (k.startsWith("pexelnest.cache.")) localStorage.removeItem(k);
       });
     } catch {
       /* ignore */

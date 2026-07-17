@@ -116,7 +116,7 @@ function mapWallpaper(raw: RawWallhaven): Wallpaper {
 // ─── Request helper with API key header ───────────────────────────────────────
 
 function wallhavenFetch(url: string): Promise<Response> {
-  const headers: Record<string, string> = { "User-Agent": "PixelNest/1.0" };
+  const headers: Record<string, string> = { "User-Agent": "PexelNest/1.0" };
   // Pass user's key from settings as a header to the proxy
   if (typeof window !== "undefined") {
     const s = getSettings();

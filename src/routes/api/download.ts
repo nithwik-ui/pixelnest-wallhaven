@@ -51,7 +51,7 @@ export const Route = createFileRoute("/api/download")({
 
         try {
           const res = await fetch(imageUrl, {
-            headers: { "User-Agent": "PixelNest/1.0" },
+            headers: { "User-Agent": "PexelNest/1.0" },
           });
 
           if (!res.ok) {

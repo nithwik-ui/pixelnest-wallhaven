@@ -19,8 +19,8 @@ function Downloads() {
   useEffect(() => {
     const load = () => setItems(getDownloads());
     load();
-    window.addEventListener("pixelnest:storage", load);
-    return () => window.removeEventListener("pixelnest:storage", load);
+    window.addEventListener("pexelnest:storage", load);
+    return () => window.removeEventListener("pexelnest:storage", load);
   }, []);
 
   const queued = items.filter((i) => i.status === "queued" || i.status === "downloading");

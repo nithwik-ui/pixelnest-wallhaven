@@ -36,8 +36,8 @@ function LibraryPage() {
 
   useEffect(() => {
     load();
-    window.addEventListener("pixelnest:storage", load);
-    return () => window.removeEventListener("pixelnest:storage", load);
+    window.addEventListener("pexelnest:storage", load);
+    return () => window.removeEventListener("pexelnest:storage", load);
   }, []);
 
   const TABS = [
@@ -145,7 +145,7 @@ function LibraryPage() {
               <button
                 onClick={() => {
                   setHistory([]);
-                  localStorage.removeItem("pixelnest.history");
+                  localStorage.removeItem("pexelnest.history");
                 }}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-[var(--color-surface)] px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
               >

@@ -112,6 +112,7 @@ function Categories() {
           topRange: "1M",
           ...(c.atleast ? { atleast: c.atleast } : {}),
           ...(c.orientation ? { orientation: c.orientation } : {}),
+          ...(c.provider ? { provider: c.provider } : {}),
         };
 
         try {
@@ -155,6 +156,7 @@ function Categories() {
                   q: c.q,
                   ...(c.atleast ? { atleast: c.atleast } : {}),
                   ...(c.orientation ? { orientation: c.orientation } : {}),
+                  ...(c.provider ? { provider: c.provider } : {}),
                 } as never
               }
               className="group relative block overflow-hidden rounded-2xl bg-[var(--color-surface)] hover-lift hover:shadow-[var(--shadow-elevated)]"

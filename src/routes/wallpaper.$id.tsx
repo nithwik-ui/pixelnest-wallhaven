@@ -102,8 +102,8 @@ function Detail() {
     toast.loading("Downloading and setting wallpaper...", { id: "set-wp" });
 
     try {
-      const filename = `pixelnest-${w.id}.${w.file_type?.split("/")[1] ?? "jpg"}`;
-      const downloadFolder = getSettings().downloadFolder || "Pictures/PixelNest";
+      const filename = `pexelnest-${w.id}.${w.file_type?.split("/")[1] ?? "jpg"}`;
+      const downloadFolder = getSettings().downloadFolder || "Pictures/PexelNest";
 
       const filePath = await electronAPI.downloadFile({
         url: w.path,
@@ -197,7 +197,7 @@ function Detail() {
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_360px] items-start">
         <div className="overflow-hidden rounded-3xl bg-[var(--color-surface)]">
           <img
             src={w.path}

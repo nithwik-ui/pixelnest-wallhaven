@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { PageHeader } from "@/components/app-shell";
 import {
   getSettings,
@@ -10,8 +10,23 @@ import {
   renameCollection,
   type AppSettings,
 } from "@/lib/storage";
-import { FolderOpen, Trash2, Pencil } from "lucide-react";
+import { providerManager } from "@/lib/providers/manager";
+import type { ProviderName, ProviderStatus } from "@/lib/providers/types";
+import { useUpdateManager } from "@/lib/update-manager";
+import { UpdateDialog } from "@/components/update-dialog";
+import {
+  FolderOpen,
+  Trash2,
+  Pencil,
+  RefreshCw,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  ToggleLeft,
+  ToggleRight,
+} from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
 
@@ -19,15 +34,23 @@ function SettingsPage() {
   const [s, setS] = useState<AppSettings>(() => ({
     theme: "light",
     quality: "original",
-    downloadFolder: "Pictures/PixelNest",
+    downloadFolder: "Pictures/PexelNest",
     autoRefresh: false,
     defaultProvider: "wallhaven",
+    enabledProviders: ["wallhaven"],
   }));
   const [stats, setStats] = useState({ favs: 0, dls: 0, hist: 0, cols: 0, storageMB: "0.0" });
   const [collections, setCollections] = useState(getCollections());
 
+  const { status, check, systemInfo, init } = useUpdateManager();
+
   useEffect(() => {
-    setS(getSettings());
+    init();
+  }, [init]);
+
+  useEffect(() => {
+    const settings = getSettings();
+    setS(settings);
     const st = getStorageStats();
     setStats({
       favs: st.favoriteCount,
@@ -48,23 +71,23 @@ function SettingsPage() {
 
   const clearCache = () => {
     if (confirm("Clear all local data (favorites, history, downloads)?")) {
-      localStorage.removeItem("pixelnest.favorites");
-      localStorage.removeItem("pixelnest.history");
-      localStorage.removeItem("pixelnest.downloads");
+      localStorage.removeItem("pexelnest.favorites");
+      localStorage.removeItem("pexelnest.history");
+      localStorage.removeItem("pexelnest.downloads");
       setStats((st) => ({ ...st, favs: 0, dls: 0, hist: 0 }));
       toast.success("Cache cleared.");
     }
   };
 
   const QUICK_FOLDERS = [
-    { label: "Pictures/PixelNest", value: "Pictures/PixelNest" },
+    { label: "Pictures/PexelNest", value: "Pictures/PexelNest" },
     { label: "Downloads", value: "Downloads" },
     { label: "Desktop", value: "Desktop" },
   ];
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Settings" subtitle="Customize your PixelNest experience." />
+      <PageHeader title="Settings" subtitle="Customize your PexelNest experience." />
 
       {/* Appearance */}
       <Group title="Appearance">
@@ -80,6 +103,8 @@ function SettingsPage() {
         </Row>
       </Group>
 
+
+
       {/* Downloads */}
       <Group title="Downloads">
         <Row label="Wallpaper Folder" hint="Where downloaded wallpapers are saved.">
@@ -92,8 +117,8 @@ function SettingsPage() {
               />
               <button
                 onClick={async () => {
-                  if (window.electronAPI) {
-                    const path = await window.electronAPI.selectDirectory();
+                  if ((window as any).electronAPI) {
+                    const path = await (window as any).electronAPI.selectDirectory();
                     if (path) {
                       update("downloadFolder", path);
                       toast.success(`Download folder set to: ${path}`);
@@ -122,7 +147,7 @@ function SettingsPage() {
                 </button>
               ))}
               <button
-                onClick={() => update("downloadFolder", "Pictures/PixelNest")}
+                onClick={() => update("downloadFolder", "Pictures/PexelNest")}
                 className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
               >
                 Reset
@@ -214,24 +239,62 @@ function SettingsPage() {
 
       {/* About */}
       <Group title="About">
-        <div className="flex items-center gap-4">
-          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-foreground">
+        <div className="flex items-start gap-5">
+          <div className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-foreground">
             <img
               src="/logo.svg"
-              alt="PixelNest"
+              alt="PexelNest"
               className="h-8 w-8"
               style={{ filter: "brightness(0) invert(1)" }}
             />
           </div>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <p>
-              <span className="font-medium text-foreground">PixelNest</span> v1.1
-            </p>
-            <p>Millions of high-quality wallpapers. Powered by Nithwik Studios.</p>
-            <p>Built for a beautiful desktop.</p>
+          <div className="flex flex-1 flex-col justify-between">
+            <div>
+              <h3 className="text-xl font-semibold tracking-tight">PexelNest</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Premium native wallpaper browser for Windows. Powered by Nithwik Studios.
+              </p>
+            </div>
+            
+            <div className="mt-5 grid grid-cols-2 gap-y-2 text-xs text-muted-foreground sm:grid-cols-4">
+              <div>
+                <span className="block font-medium text-foreground">Version</span>
+                {systemInfo?.version ? `v${systemInfo.version}` : "Unknown"}
+              </div>
+              <div>
+                <span className="block font-medium text-foreground">Architecture</span>
+                {systemInfo?.arch || "Unknown"}
+              </div>
+              <div>
+                <span className="block font-medium text-foreground">Electron</span>
+                {systemInfo?.electron ? `v${systemInfo.electron}` : "Unknown"}
+              </div>
+              <div>
+                <span className="block font-medium text-foreground">Install Type</span>
+                {systemInfo?.isWindowsStore ? "Microsoft Store" : "Standalone"}
+              </div>
+            </div>
+            
+            <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-border pt-6">
+              <button
+                onClick={() => check(false)}
+                disabled={status === "checking"}
+                className="inline-flex h-9 items-center justify-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+              >
+                {status === "checking" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                {status === "checking" ? "Checking..." : "Check for Updates"}
+              </button>
+              
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+                <Toggle value={s.autoCheckUpdates} onChange={(v) => update("autoCheckUpdates", v)} />
+                Automatically check for updates on startup
+              </label>
+            </div>
           </div>
         </div>
       </Group>
+
+      <UpdateDialog />
     </div>
   );
 }

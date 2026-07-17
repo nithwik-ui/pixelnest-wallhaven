@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 export function WallpaperCard({ w }: { w: Wallpaper }) {
   const [fav, setFav] = useState(false);
+  const providerBadge = w.provider === "pexels" ? "P" : w.provider === "pixabay" ? "X" : "W";
   const [loaded, setLoaded] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
@@ -52,15 +53,26 @@ export function WallpaperCard({ w }: { w: Wallpaper }) {
       className="group relative block overflow-hidden rounded-2xl bg-[var(--color-surface)] hover-lift hover:shadow-[var(--shadow-elevated)] animate-fade-in"
       style={{ aspectRatio: `${w.dimension_x} / ${w.dimension_y}` }}
     >
-      {!loaded && <div className="absolute inset-0 skeleton" />}
+      {/* Low-res blur-up placeholder */}
+      {!loaded && (
+        <img
+          src={w.thumbs.small}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover blur-xl scale-110"
+          aria-hidden="true"
+        />
+      )}
+      
+      {/* High-res image */}
       <img
         src={w.thumbs.large}
         alt={`Wallpaper ${w.id}`}
         loading="lazy"
+        decoding="async"
         onLoad={() => setLoaded(true)}
         className={cn(
-          "h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]",
-          loaded ? "opacity-100" : "opacity-0",
+          "relative z-10 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.04]",
+          loaded ? "opacity-100 blur-0" : "opacity-0 blur-md",
         )}
       />
 

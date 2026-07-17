@@ -190,6 +190,22 @@ function Discover() {
       />
 
       <div className="mb-8 space-y-4 rounded-2xl border border-border bg-[var(--color-surface)] p-5">
+        <FilterRow label="Provider">
+          {[
+            { label: "All Sources", value: "all" },
+            { label: "Wallhaven", value: "wallhaven" },
+            { label: "Pexels", value: "pexels" },
+            { label: "Pixabay", value: "pixabay" },
+          ].map((o) => (
+            <Chip
+              key={o.value}
+              active={(search.provider ?? "all") === o.value}
+              onClick={() => set({ provider: o.value })}
+            >
+              {o.label}
+            </Chip>
+          ))}
+        </FilterRow>
         <FilterRow label="Sort">
           {SORT_OPTS.map((o) => (
             <Chip

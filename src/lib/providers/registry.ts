@@ -10,6 +10,7 @@ export { providerManager, searchProviders, getWallpaperById } from "./manager";
 export { wallhavenProvider } from "./wallhaven";
 export { pexelsProvider } from "./pexels";
 export { pixabayProvider } from "./pixabay";
+export { nasaProvider } from "./nasa";
 export type {
   WallpaperProvider,
   SearchParams,

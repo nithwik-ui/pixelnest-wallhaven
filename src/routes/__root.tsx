@@ -61,13 +61,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PixelNest — Premium Wallpapers for Windows" },
+      { title: "PexelNest — Premium Wallpapers for Windows" },
       {
         name: "description",
         content:
           "Discover, browse and download millions of stunning high-resolution wallpapers powered by Nithwik Studios.",
       },
-      { property: "og:title", content: "PixelNest — Premium Wallpapers" },
+      { property: "og:title", content: "PexelNest — Premium Wallpapers" },
       {
         property: "og:description",
         content: "A beautiful, fast wallpaper app for Windows. Powered by Nithwik Studios.",

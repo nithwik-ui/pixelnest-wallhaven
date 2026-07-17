@@ -17,7 +17,10 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { getSettings, saveSettings } from "@/lib/storage";
+import { getSettings } from "@/lib/storage";
+import { TitleBar } from "./title-bar";
+import { useUpdateManager, type UpdateState } from "@/lib/update-manager";
+import { toast } from "sonner";
 
 type NavItem = { to: string; label: string; icon: typeof Home; exact?: boolean };
 const NAV: NavItem[] = [
@@ -42,14 +45,31 @@ export function AppShell({ children }: { children: ReactNode }) {
     const s = getSettings();
     setTheme(s.theme);
     document.documentElement.classList.toggle("dark", s.theme === "dark");
-  }, []);
 
-  const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    saveSettings({ theme: next });
-    document.documentElement.classList.toggle("dark", next === "dark");
-  };
+    const updateManager = useUpdateManager.getState();
+    updateManager.init();
+
+    if (s.autoCheckUpdates) {
+      setTimeout(() => {
+        updateManager.check(true);
+      }, 3000);
+    }
+
+    const unsub = useUpdateManager.subscribe((state: UpdateState, prevState: UpdateState) => {
+      if (prevState.status === "checking" && state.status === "available" && !state.dialogOpen) {
+        toast("New PexelNest Update Available", {
+          description: `Version ${state.newVersion || "latest"} is ready.`,
+          duration: 10000,
+          action: {
+            label: "Download",
+            onClick: () => useUpdateManager.getState().setDialogOpen(true),
+          },
+        });
+      }
+    });
+
+    return unsub;
+  }, []);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,12 +85,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-background">
             <img
               src="/logo.svg"
-              alt="PixelNest logo"
+              alt="PexelNest logo"
               className="h-5 w-5 invert dark:invert-0"
               style={{ filter: "brightness(0) invert(1)" }}
             />
           </div>
-          <span className="text-lg font-semibold tracking-tight">PixelNest</span>
+          <span className="text-lg font-semibold tracking-tight">PexelNest</span>
         </Link>
 
         <nav className="flex flex-1 flex-col gap-0.5">
@@ -103,11 +123,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
+        <TitleBar />
         <header className="glass sticky top-0 z-30 border-b border-border">
           <div className="flex items-center gap-3 px-6 py-3.5">
             <form onSubmit={onSearch} className="relative flex-1 max-w-2xl">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
+                id="main-search-input"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search millions of wallpapers…"
@@ -120,13 +142,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="grid h-10 w-10 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[var(--color-surface)] hover:text-foreground"
             >
               <RefreshCw className="h-4 w-4" />
-            </button>
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-              className="grid h-10 w-10 place-items-center rounded-full border border-border bg-background text-muted-foreground transition-all hover:bg-[var(--color-surface)] hover:text-foreground"
-            >
-              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </button>
           </div>
         </header>

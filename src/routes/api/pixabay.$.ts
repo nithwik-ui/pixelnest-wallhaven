@@ -5,45 +5,56 @@ import { createFileRoute } from "@tanstack/react-router";
  *
  * Proxies requests to pixabay.com/api/* to keep the API key server-side.
  * Reads API key from:
- *   1. VITE_PIXABAY_API_KEY environment variable
- *   2. Bundled fallback Pixabay API key
+ *   1. X-Pixabay-Key request header (user-configured key from Settings)
+ *   2. VITE_PIXABAY_API_KEY environment variable
  *
- * Usage: GET /api/pixabay/api/?q=nature&image_type=photo
+ * Usage: GET /api/pixabay/api/?q=nature&image_type=photo&orientation=horizontal
  */
 export const Route = createFileRoute("/api/pixabay/$")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        const url = new URL(request.url);
-        const path = (params as { _splat?: string })._splat ?? "";
+        const url    = new URL(request.url);
+        const path   = (params as { _splat?: string })._splat ?? "";
+        const apiKey =
+          request.headers.get("X-Pixabay-Key") ??
+          process.env.VITE_PIXABAY_API_KEY       ??
+          "";
 
-        // Use environment variable if set, otherwise fallback to the official public Pixabay demo key
-        const apiKey = process.env.VITE_PIXABAY_API_KEY ?? "488006-8d1847cc08dfa5b51a029db51";
+        if (!apiKey) {
+          return new Response(
+            JSON.stringify({
+              error:   "Pixabay API key not configured.",
+              message: "Set VITE_PIXABAY_API_KEY in your .env file, or enter a key in Settings → API Integrations.",
+            }),
+            {
+              status:  503,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        }
 
+        // Inject the key into query params (Pixabay uses ?key=...)
         url.searchParams.set("key", apiKey);
 
-        // Pixabay's base URL is https://pixabay.com/
-        // E.g. https://pixabay.com/api/?key=...
         const target = `https://pixabay.com/${path}${url.search}`;
 
         try {
-          const res = await fetch(target, {
-            headers: {
-              "User-Agent": "PixelNest/1.0",
-            },
+          const res  = await fetch(target, {
+            headers: { "User-Agent": "PexelNest/1.0" },
             signal: AbortSignal.timeout(10_000),
           });
           const body = await res.text();
           return new Response(body, {
-            status: res.status,
+            status:  res.status,
             headers: {
-              "Content-Type": res.headers.get("content-type") ?? "application/json",
+              "Content-Type":  res.headers.get("content-type") ?? "application/json",
               "Cache-Control": "public, max-age=120",
             },
           });
         } catch (e) {
           return new Response(JSON.stringify({ error: String(e) }), {
-            status: 502,
+            status:  502,
             headers: { "Content-Type": "application/json" },
           });
         }

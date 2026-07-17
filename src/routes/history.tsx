@@ -13,8 +13,8 @@ function HistoryPage() {
   useEffect(() => {
     const load = () => setItems(getHistory());
     load();
-    window.addEventListener("pixelnest:storage", load);
-    return () => window.removeEventListener("pixelnest:storage", load);
+    window.addEventListener("pexelnest:storage", load);
+    return () => window.removeEventListener("pexelnest:storage", load);
   }, []);
 
   return (

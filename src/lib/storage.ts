@@ -1,10 +1,10 @@
-import type { Wallpaper } from "./providers/types";
+import type { Wallpaper, ProviderName } from "./providers/types";
 
-const FAV_KEY = "pixelnest.favorites";
-const HIST_KEY = "pixelnest.history";
-const DL_KEY = "pixelnest.downloads";
-const SETTINGS_KEY = "pixelnest.settings";
-const COLLECTIONS_KEY = "pixelnest.collections";
+const FAV_KEY = "pexelnest.favorites";
+const HIST_KEY = "pexelnest.history";
+const DL_KEY = "pexelnest.downloads";
+const SETTINGS_KEY = "pexelnest.settings";
+const COLLECTIONS_KEY = "pexelnest.collections";
 
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -19,7 +19,7 @@ function read<T>(key: string, fallback: T): T {
 function write<T>(key: string, value: T) {
   if (typeof window === "undefined") return;
   localStorage.setItem(key, JSON.stringify(value));
-  window.dispatchEvent(new CustomEvent("pixelnest:storage", { detail: { key } }));
+  window.dispatchEvent(new CustomEvent("pexelnest:storage", { detail: { key } }));
 }
 
 // ─── Favorites ────────────────────────────────────────────────────────────────
@@ -174,18 +174,21 @@ export interface AppSettings {
   /** Pixabay API key — required for Pixabay results */
   pixabayApiKey?: string;
   /** Default provider used when provider is not specified */
-  defaultProvider: "wallhaven" | "pexels" | "pixabay" | "all";
+  defaultProvider: ProviderName | "all";
   /** Which providers are currently enabled (persisted) */
-  enabledProviders?: ("wallhaven" | "pexels" | "pixabay")[];
+  enabledProviders?: ProviderName[];
+  /** Whether to silently check for updates on startup */
+  autoCheckUpdates: boolean;
 }
 
 const defaultSettings: AppSettings = {
   theme: "light",
   quality: "original",
-  downloadFolder: "Pictures/PixelNest",
+  downloadFolder: "Pictures/PexelNest",
   autoRefresh: false,
+  autoCheckUpdates: true,
   defaultProvider: "all",
-  enabledProviders: ["wallhaven", "pexels", "pixabay"],
+  enabledProviders: ["wallhaven", "pexels", "pixabay", "nasa"],
 };
 
 export function getSettings(): AppSettings {

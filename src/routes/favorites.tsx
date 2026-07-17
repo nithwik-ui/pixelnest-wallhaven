@@ -17,8 +17,8 @@ function Favorites() {
     const load = () => setItems(getFavorites());
     load();
     const onChange = () => load();
-    window.addEventListener("pixelnest:storage", onChange);
-    return () => window.removeEventListener("pixelnest:storage", onChange);
+    window.addEventListener("pexelnest:storage", onChange);
+    return () => window.removeEventListener("pexelnest:storage", onChange);
   }, []);
 
   const filtered = useMemo(() => {

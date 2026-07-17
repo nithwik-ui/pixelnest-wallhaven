@@ -27,6 +27,7 @@ import type {
 import { wallhavenProvider } from "./wallhaven";
 import { pexelsProvider } from "./pexels";
 import { pixabayProvider } from "./pixabay";
+import { nasaProvider } from "./nasa";
 import { getSettings, saveSettings } from "../storage";
 
 // ─── Registry — add future providers here ─────────────────────────────────────
@@ -35,9 +36,7 @@ const PROVIDER_REGISTRY: WallpaperProvider[] = [
   wallhavenProvider,
   pexelsProvider,
   pixabayProvider,
-  // nasaProvider,
-  // bingProvider,
-  // unsplashProvider,
+  nasaProvider,
 ];
 
 // ─── Retry utility ────────────────────────────────────────────────────────────
@@ -77,7 +76,7 @@ class ProviderManager {
    */
   private get enabledIds(): Set<ProviderName> {
     const s = getSettings();
-    return new Set(s.enabledProviders ?? ["wallhaven", "pexels", "pixabay"]);
+    return new Set(s.enabledProviders ?? ["wallhaven", "pexels", "pixabay", "nasa"]);
   }
 
   private set enabledIds(ids: Set<ProviderName>) {

@@ -16,7 +16,7 @@ let serverProcess = null;
 let serverPort = 3000;
 
 // AutoUpdater Configuration
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.allowPrerelease = false;
 autoUpdater.allowDowngrade = false; // Rollback safety
 
@@ -60,7 +60,7 @@ function startNitroServer(port) {
 
 function resolveDownloadFolder(folderPath) {
   if (!folderPath) {
-    return path.join(app.getPath("pictures"), "PixelNest");
+    return path.join(app.getPath("pictures"), "PexelNest");
   }
   if (path.isAbsolute(folderPath)) {
     return folderPath;
@@ -169,9 +169,11 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
-    title: "PixelNest",
+    title: "PexelNest",
     icon: path.join(__dirname, "../public/icon.ico"),
     autoHideMenuBar: true,
+    frame: false,
+    titleBarStyle: "hidden",
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
@@ -191,16 +193,8 @@ async function createWindow() {
     mainWindow = null;
   });
 
-  // Trigger update check on startup in production
-  if (app.isPackaged) {
-    mainWindow.webContents.once("did-finish-load", () => {
-      setTimeout(() => {
-        autoUpdater.checkForUpdatesAndNotify().catch((err) => {
-          console.error("Error checking for updates on startup:", err);
-        });
-      }, 2000);
-    });
-  }
+  // We removed the hardcoded startup check here.
+  // The React frontend will orchestrate the background check if the user has it enabled.
 
   // Setup auto-updater listeners
   autoUpdater.on("checking-for-update", () => {
@@ -220,23 +214,13 @@ async function createWindow() {
     mainWindow.webContents.send("update-status", {
       status: "downloading",
       percent: progressObj.percent,
+      transferred: progressObj.transferred,
+      total: progressObj.total,
     });
   });
   autoUpdater.on("update-downloaded", (info) => {
     mainWindow.webContents.send("update-status", { status: "downloaded", version: info.version });
-
-    dialog
-      .showMessageBox(mainWindow, {
-        type: "info",
-        title: "Update Ready",
-        message: `A new version (${info.version}) has been downloaded. Restart the application to apply the update?`,
-        buttons: ["Restart Now", "Later"],
-      })
-      .then((result) => {
-        if (result.response === 0) {
-          autoUpdater.quitAndInstall();
-        }
-      });
+    // Removed dialog.showMessageBox so React can handle the UI natively.
   });
   autoUpdater.on("error", (err) => {
     mainWindow.webContents.send("update-status", { status: "error", message: err.message });
@@ -283,11 +267,62 @@ ipcMain.handle("set-as-wallpaper", async (event, filePath) => {
   return true;
 });
 
+ipcMain.handle("get-system-info", () => {
+  return {
+    version: app.getVersion(),
+    electron: process.versions.electron,
+    arch: os.arch(),
+    isWindowsStore: process.windowsStore === true,
+  };
+});
+
 ipcMain.handle("check-for-updates", async () => {
   if (app.isPackaged) {
-    return await autoUpdater.checkForUpdatesAndNotify();
+    try {
+      return await autoUpdater.checkForUpdates();
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   }
   return null;
+});
+
+ipcMain.handle("download-update", async () => {
+  try {
+    await autoUpdater.downloadUpdate();
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+});
+
+ipcMain.handle("install-update", () => {
+  autoUpdater.quitAndInstall(false, true);
+});
+
+ipcMain.handle("open-microsoft-store", async () => {
+  const { shell } = require("electron");
+  await shell.openExternal("ms-windows-store://downloadsandupdates");
+});
+
+ipcMain.on("window-minimize", () => {
+  if (mainWindow) mainWindow.minimize();
+});
+
+ipcMain.on("window-maximize", () => {
+  if (mainWindow) {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  }
+});
+
+ipcMain.on("window-close", () => {
+  if (mainWindow) mainWindow.close();
 });
 
 app.on("ready", async () => {

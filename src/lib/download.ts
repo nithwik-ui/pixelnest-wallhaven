@@ -10,7 +10,7 @@ import { addDownload, updateDownload, getSettings } from "./storage";
 /** Derive a clean filename from a wallpaper */
 function getFilename(w: Wallpaper): string {
   const ext = w.file_type?.split("/")[1] ?? "jpg";
-  return `pixelnest-${w.id}.${ext}`;
+  return `pexelnest-${w.id}.${ext}`;
 }
 
 /**

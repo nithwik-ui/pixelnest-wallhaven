@@ -58,6 +58,7 @@ export type CategoryPreset = {
   icon: string;
   atleast?: string;
   orientation?: "landscape" | "portrait" | "square";
+  provider?: "wallhaven" | "pexels" | "pixabay" | "nasa" | "all";
   description: string;
 };
 
@@ -212,6 +213,7 @@ export const CATEGORY_PRESETS: CategoryPreset[] = [
     q: "space",
     color: "#818cf8",
     icon: "Star",
+    provider: "nasa",
     description: "Outer space exploration",
   },
   {

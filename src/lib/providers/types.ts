@@ -1,5 +1,5 @@
 /**
- * UnifiedWallpaper — the canonical data model for PixelNest.
+ * UnifiedWallpaper — the canonical data model for PexelNest.
  *
  * Every provider (Wallhaven, Pexels, Pixabay, future providers) MUST map
  * their API responses to this type. UI components only consume this type.
@@ -12,7 +12,7 @@
 
 // ─── Unified Spec Fields ──────────────────────────────────────────────────────
 
-export type ProviderName = "wallhaven" | "pexels" | "pixabay";
+export type ProviderName = "wallhaven" | "pexels" | "pixabay" | "nasa";
 export type Orientation = "landscape" | "portrait" | "square";
 
 export interface UnifiedWallpaper {

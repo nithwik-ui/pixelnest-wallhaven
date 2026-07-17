@@ -1,6 +1,6 @@
 {
-  "name": "pixelnest",
-  "version": "1.1.0",
+  "name": "pexelnest",
+  "version": "1.2.0",
   "description": "Premium native wallpaper browser for Windows.",
   "author": "Nithwik Studios",
   "main": "electron/main.cjs",
@@ -70,7 +70,8 @@
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
     "vite-tsconfig-paths": "^6.0.2",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
@@ -94,8 +95,8 @@
     "vite": "^8.0.16"
   },
   "build": {
-    "appId": "com.nithwik.pixelnest",
-    "productName": "PixelNest",
+    "appId": "com.nithwik.pexelnest",
+    "productName": "PexelNest",
     "directories": {
       "output": "dist-electron"
     },
@@ -108,7 +109,6 @@
     "win": {
       "target": [
         "nsis",
-        "portable",
         "appx"
       ],
       "icon": "public/icon.ico"
@@ -118,19 +118,27 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "PixelNest"
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": false
     },
     "appx": {
-      "publisher": "CN=NithwikStudios",
-      "displayName": "PixelNest",
+      "applicationId": "PexelNest",
+      "identityName": "NithwikStudios.PexelNest",
+      "publisher": "CN=87F03366-B14E-420D-BBE6-A007F4AEBE34",
       "publisherDisplayName": "Nithwik Studios",
-      "identityName": "com.nithwik.pixelnest"
+      "displayName": "PexelNest",
+      "backgroundColor": "#121212",
+      "languages": [
+        "en-US"
+      ],
+      "showNameOnTiles": true,
+      "minVersion": "10.0.19041.0"
     },
     "publish": [
       {
         "provider": "github",
         "owner": "nithwik-ui",
-        "repo": "pixelnest-wallhaven"
+        "repo": "pexelnest-wallhaven"
       }
     ],
     "compression": "maximum"

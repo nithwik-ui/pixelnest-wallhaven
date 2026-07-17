@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/wallhaven/$")({
 
         try {
           const res = await fetch(target, {
-            headers: { "User-Agent": "PixelNest/1.0" },
+            headers: { "User-Agent": "PexelNest/1.0" },
             signal: AbortSignal.timeout(10_000),
           });
           const body = await res.text();
